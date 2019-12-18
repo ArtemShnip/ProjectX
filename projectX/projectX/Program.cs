@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Management;
+using System.Diagnostics;
 
 namespace ProjectX
 {
@@ -7,22 +8,22 @@ namespace ProjectX
     {
         static void Main(string[] args)
         {
-            ManagementEventWatcher startWatch = new ManagementEventWatcher(
-                new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace WHERE ProcessName = \"calculator.exe\""));
-            startWatch.EventArrived += startWatch_class;
-            startWatch.EventArrived += time_class;
-            startWatch.Start();
+            ManagementEventWatcher startProgramm = new ManagementEventWatcher(
+                new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace WHERE ProcessName = \"calculator.exe\""));            
+            startProgramm.EventArrived += startWatch_class;
+            startProgramm.EventArrived += time_class;
+            startProgramm.Start();
 
 
-            ManagementEventWatcher stopWatch = new ManagementEventWatcher(
+            ManagementEventWatcher stopProgramm = new ManagementEventWatcher(
                 new WqlEventQuery("SELECT * FROM Win32_ProcessStopTrace WHERE ProcessName = \"calculator.exe\""));
-            stopWatch.EventArrived += stopWatch_class;
-            stopWatch.EventArrived += time_class;
-            stopWatch.Start();
+            stopProgramm.EventArrived += stopWatch_class;
+            stopProgramm.EventArrived += time_class;
+            stopProgramm.Start();
             Console.WriteLine("Press ENTER to exit");
             Console.ReadLine();
-            startWatch.Stop();
-            stopWatch.Stop();
+            startProgramm.Stop();
+            stopProgramm.Stop();
         }
         static void startWatch_class(object programm, EventArrivedEventArgs e)
         {
@@ -30,7 +31,7 @@ namespace ProjectX
         }
         static void stopWatch_class(object programm, EventArrivedEventArgs e)
         {
-            Console.WriteLine("Process stopped: {0}", e.NewEvent.Properties["ProcessName"].Value);
+            Console.WriteLine("Process stopped: {0}", e.NewEvent.Properties["ProcessName"].Value);            
         }
         static void time_class(object programm, EventArrivedEventArgs e)
         {
