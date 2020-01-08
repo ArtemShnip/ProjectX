@@ -6,14 +6,15 @@ namespace ProjectX
 {
     class Program
     {
-        static void Main(string[] args)
+        public static  Stopwatch sekundomer = new Stopwatch();
+        public static string ID, nameStart, nameStop;
+        public static string timeStart, timeStop;
+       public static void Main(string[] args)
         {
             ManagementEventWatcher startProgramm = new ManagementEventWatcher(
-                new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace"));            
+                new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace"));
             startProgramm.EventArrived += startWatch_class;
             startProgramm.Start();
-
-
             ManagementEventWatcher stopProgramm = new ManagementEventWatcher(
                 new WqlEventQuery("SELECT * FROM Win32_ProcessStopTrace"));
             stopProgramm.EventArrived += stopWatch_class;
@@ -25,40 +26,30 @@ namespace ProjectX
         }
         static void startWatch_class(object programm, EventArrivedEventArgs e)
         {
-            string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            if (name == "Calculator.exe")
+            string cal = e.NewEvent.Properties["ProcessName"].Value.ToString();
+            if (cal == "Calculator.exe")
             {
-                bool start = true;
-                Calculator_Class(start);
+                ID = e.NewEvent.Properties["ProcessId"].ToString();  //????????????????????????????????    HANDLE     ???????????????
+                nameStart = e.NewEvent.Properties["ProcessName"].Value.ToString();
+                DateTime time = DateTime.Now;
+                timeStart = time.ToLongTimeString();
+                sekundomer.Start();
             }
         }
         static void stopWatch_class(object programm, EventArrivedEventArgs e)
         {
-            string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            if (name == "Calculator.exe")
-            {
-                bool start = false;
-                Calculator_Class(start);
-            }
+            DateTime time = DateTime.Now;
+            nameStop = e.NewEvent.Properties["ProcessName"].Value.ToString();
+            timeStop = time.ToLongTimeString();
+            info();
         }
-        static void Calculator_Class(bool start)
+        static void info()
         {
-            Stopwatch sekundomer = new Stopwatch();     //??????????????????????????
-            if (start == true)
-            {                
-                Console.Write("START  Calculator  ");
-                DateTime time = DateTime.Now;
-                Console.WriteLine(time);
-                sekundomer.Start();
-            }
-            else
+            if (nameStop == "Calculator.exe")
             {
-                Console.Write("STOP  Calculator  ");
-                DateTime time = DateTime.Now;
-                Console.WriteLine(time);
                 sekundomer.Stop();
-                TimeSpan ts = sekundomer.Elapsed;                
-                Console.WriteLine("\nсекундомер -- " + ts);
+                TimeSpan ts = sekundomer.Elapsed;
+                Console.WriteLine($@" {nameStart} started at {timeStart} closed at {timeStop} worked {ts}");
             }
         }
     }
