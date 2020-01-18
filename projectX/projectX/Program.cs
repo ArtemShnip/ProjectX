@@ -11,6 +11,7 @@ namespace ProjectX
         public static Stopwatch sekundomerPS = new Stopwatch();
         public static string ID, nameStart, nameStop;
         public static string timeStart, timeStop;
+
        public static void Main(string[] args)
         {
             ManagementEventWatcher startProgramm = new ManagementEventWatcher(
@@ -26,12 +27,9 @@ namespace ProjectX
             startProgramm.Stop();
             stopProgramm.Stop();
         }
+
         static void startWatch_class(object programm, EventArrivedEventArgs e)
         {
-            //string name123 = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            //string id123 = e.NewEvent.Properties["ProcessId"].Value.ToString();
-            //Console.WriteLine(" start  " + name123 + "------- " + id123);
-
             string cal = e.NewEvent.Properties["ProcessName"].Value.ToString();
             if (cal == "Calculator.exe")
             {
@@ -58,18 +56,15 @@ namespace ProjectX
                 sekundomerPS.Start();
             }
         }
+
         static void stopWatch_class(object programm, EventArrivedEventArgs e)
         {
-
-            //string name123 = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            //string id123 = e.NewEvent.Properties["ProcessId"].Value.ToString();
-            //Console.WriteLine(" stop  " + name123 + "------- " + id123);
-
             DateTime time = DateTime.Now;
             nameStop = e.NewEvent.Properties["ProcessName"].Value.ToString();
             timeStop = time.ToLongTimeString();
             info();
         }
+
         static void info()
         {
             if (nameStop == "Calculator.exe")
