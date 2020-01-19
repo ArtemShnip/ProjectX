@@ -1,5 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Management;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 
 namespace ProjectX_V._2
 {
@@ -7,10 +12,11 @@ namespace ProjectX_V._2
     {
         public static Sekundomer sekundomer = new Sekundomer();
         public static ProgrammInfo info = new ProgrammInfo();
-        public static string[] arrayProgramm = { "Calculator.exe", "Illustrator.exe", "Photoshop.exe" };
+        public static string[] arrayProgramm = { "Calculator.exe", "Illustrator.exe", "Photoshop.exe", "notepad.exe", "HxCalendarAppImm.exe", "mspaint.exe" };
+        public static string id;
 
         public static void Main(string[] args)
-        {
+        { 
             ManagementEventWatcher startProgramm = new ManagementEventWatcher(
                 new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace"));
             startProgramm.EventArrived += startWatch_class;
@@ -19,8 +25,9 @@ namespace ProjectX_V._2
                 new WqlEventQuery("SELECT * FROM Win32_ProcessStopTrace"));
             stopProgramm.EventArrived += stopWatch_class;
             stopProgramm.Start();
-            Console.WriteLine("Press ENTER to exit");
+            Console.WriteLine("\n          Press ENTER to exit and save");
             Console.ReadLine();
+            sekundomer.StopAndSave();
             startProgramm.Stop();
             stopProgramm.Stop();
         }
@@ -28,26 +35,21 @@ namespace ProjectX_V._2
         static void startWatch_class(object programm, EventArrivedEventArgs e)
         {
             string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
+            
             if (Array.Exists(arrayProgramm, element => element == name))
             {
-                info.Id = e.NewEvent.Properties["ProcessId"].Value.ToString();
-                info.NameStart = e.NewEvent.Properties["ProcessName"].Value.ToString();
+                id = e.NewEvent.Properties["ProcessId"].Value.ToString();
                 DateTime time = DateTime.Now;
-                info.TimeStart = time.ToLongTimeString();
-                sekundomer.Start(info);
+                sekundomer.Start();
             }
         }
 
         static void stopWatch_class(object programm, EventArrivedEventArgs e)
         {
-            if (e.NewEvent.Properties["ProcessId"].Value.ToString().Equals(info.Id))
+            if (e.NewEvent.Properties["ProcessId"].Value.ToString().Equals(id))
             {
-                info.NameStop = e.NewEvent.Properties["ProcessName"].Value.ToString();
-                DateTime time = DateTime.Now;
-                info.TimeStop = time.ToLongTimeString();
-                sekundomer.Stop(info);
+                sekundomer.Stop(info, programm , e);
             }
-            
         }
     }
 }
