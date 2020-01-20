@@ -14,6 +14,7 @@ namespace ProjectX_V._2
         public static ProgrammInfo info = new ProgrammInfo();
         public static string[] arrayProgramm = { "Calculator.exe", "Illustrator.exe", "Photoshop.exe", "notepad.exe", "HxCalendarAppImm.exe", "mspaint.exe","Telegram.exe" };
         public static string id;
+        public static string nameTest,idTest,timeTest;
 
         public static void Main(string[] args)
         { 
@@ -25,7 +26,7 @@ namespace ProjectX_V._2
                 new WqlEventQuery("SELECT * FROM Win32_ProcessStopTrace"));
             stopProgramm.EventArrived += StopProcesses;
             stopProgramm.Start();
-            Console.WriteLine("\n          Press ENTER to exit and save");
+            Console.WriteLine("          Press ENTER to exit and save");
             Console.ReadLine();
             sekundomer.StopAndSave();
             startProgramm.Stop();
@@ -37,11 +38,16 @@ namespace ProjectX_V._2
             string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
             if (Array.Exists(arrayProgramm, element => element == name))
             {
-            
                 id = e.NewEvent.Properties["ProcessId"].Value.ToString();
                 DateTime time = DateTime.Now;
                 sekundomer.Start();
-                Console.WriteLine("start");
+                //Console.WriteLine("start");
+
+
+                nameTest = e.NewEvent.Properties["ProcessName"].Value.ToString();
+                idTest = e.NewEvent.Properties["ProcessId"].Value.ToString();
+                timeTest = time.ToString();
+                Console.WriteLine($"{nameTest}   {idTest}  {timeTest}");
             }
         }
 
@@ -49,8 +55,13 @@ namespace ProjectX_V._2
         {
             if (e.NewEvent.Properties["ProcessId"].Value.ToString().Equals(id))
             {
+                DateTime time = DateTime.Now;
+                nameTest = e.NewEvent.Properties["ProcessName"].Value.ToString();
+                idTest = e.NewEvent.Properties["ProcessId"].Value.ToString();
+                timeTest = time.ToString();
+                Console.WriteLine($"{nameTest}   {idTest}  {timeTest}");
                 sekundomer.Stop(info, programm , e);
-                Console.WriteLine("stop");
+                //Console.WriteLine("stop");
             }
         }
     }

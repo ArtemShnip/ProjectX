@@ -25,7 +25,6 @@ namespace ProjectX_V._2
             stopwatch.Stop();
             TimeSpan ts = stopwatch.Elapsed;
             stopwatch.Reset();
-
             list.Add(new ProgrammInfo()
             {
                 Id = e.NewEvent.Properties["ProcessId"].Value.ToString(),
