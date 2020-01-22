@@ -14,8 +14,6 @@ namespace ProjectX_V._2
         [DataMember]
         public string NameStart { get; set; }
 
-        public string NameStop { get; set; }
-
         [DataMember]
         public string TimeStart { get; set; }
 
@@ -27,7 +25,7 @@ namespace ProjectX_V._2
 
         public override string ToString()
         {
-            return $"\n ID - {Id}\n name start - {NameStart}\n name stop - {NameStop}\n time start - {TimeStart}\n time stop - {TimeStop}\n sekundomer - {LongTime}";
+            return $"\n ID - {Id}\n name start - {NameStart}\n  time start - {TimeStart}\n time stop - {TimeStop}\n sekundomer - {LongTime}";
         }
     }
 }

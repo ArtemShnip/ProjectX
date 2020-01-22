@@ -45,6 +45,7 @@ namespace ProjectX_V._2
         {
             if (e.NewEvent.Properties["ProcessId"].Value.ToString().Equals(id))
             {
+                nameStarted = "";
                 DateTime time = DateTime.Now;
                 Console.WriteLine("stop");
                 sekundomer.Stop(info, programm , e);

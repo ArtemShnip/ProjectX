@@ -35,10 +35,10 @@ namespace ProjectX_V._2
             Console.WriteLine($"{e.NewEvent.Properties["ProcessName"].Value.ToString()} - data is saved");
         }
 
-        public void StopAndSave()
+        public async void StopAndSave()
         {
             Serialization finish = new Serialization();
-            finish.SerializeAsync(list);
+            await finish.SerializeAsync(list);
         }
     }
 }
