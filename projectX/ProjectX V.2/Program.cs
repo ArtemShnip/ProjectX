@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Management;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 
 namespace ProjectX_V._2
@@ -13,8 +9,7 @@ namespace ProjectX_V._2
         public static Sekundomer sekundomer = new Sekundomer();
         public static ProgrammInfo info = new ProgrammInfo();
         public static string[] arrayProgramm = { "Calculator.exe", "Illustrator.exe", "Photoshop.exe", "notepad.exe", "HxCalendarAppImm.exe", "mspaint.exe","Telegram.exe" };
-        public static string id;
-        public static string nameTest,idTest,timeTest;
+        public static string id, nameStarted;
 
         public static void Main(string[] args)
         { 
@@ -36,18 +31,13 @@ namespace ProjectX_V._2
         static void StartProcesses(object programm, EventArrivedEventArgs e)
         {
             string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            if (Array.Exists(arrayProgramm, element => element == name))
+            if (Array.Exists(arrayProgramm, element => element == name) && name != nameStarted)
             {
                 id = e.NewEvent.Properties["ProcessId"].Value.ToString();
                 DateTime time = DateTime.Now;
+                Console.WriteLine("start");
                 sekundomer.Start();
-                //Console.WriteLine("start");
-
-
-                nameTest = e.NewEvent.Properties["ProcessName"].Value.ToString();
-                idTest = e.NewEvent.Properties["ProcessId"].Value.ToString();
-                timeTest = time.ToString();
-                Console.WriteLine($"{nameTest}   {idTest}  {timeTest}");
+                nameStarted = e.NewEvent.Properties["ProcessName"].Value.ToString();
             }
         }
 
@@ -56,12 +46,9 @@ namespace ProjectX_V._2
             if (e.NewEvent.Properties["ProcessId"].Value.ToString().Equals(id))
             {
                 DateTime time = DateTime.Now;
-                nameTest = e.NewEvent.Properties["ProcessName"].Value.ToString();
-                idTest = e.NewEvent.Properties["ProcessId"].Value.ToString();
-                timeTest = time.ToString();
-                Console.WriteLine($"{nameTest}   {idTest}  {timeTest}");
+                Console.WriteLine("stop");
                 sekundomer.Stop(info, programm , e);
-                //Console.WriteLine("stop");
+                
             }
         }
     }

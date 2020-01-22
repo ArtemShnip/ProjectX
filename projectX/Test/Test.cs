@@ -1,20 +1,8 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Management;
-
-namespace Test
+﻿
+public class test 
 {
-    class Test
+    public static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            foreach (Process process in Process.GetProcesses())
-            {
-                // выводим id и имя процесса
-                Console.WriteLine($"ID: {process.StartTime.ToLongTimeString()}  Name: {process.ProcessName}");
-            }
-        }
+
     }
 }
