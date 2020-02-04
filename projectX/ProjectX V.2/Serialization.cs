@@ -9,9 +9,12 @@ namespace ProjectX_V._2
     {
         public async System.Threading.Tasks.Task SerializeAsync(List<ProgrammInfo> list)
         {
-            using (FileStream fs = File.Create("save2.json"))   // sreamwriter
+            using (FileStream fs = File.OpenWrite("save2.json"))
             {
-                await JsonSerializer.SerializeAsync(fs, list);
+                var options = new JsonSerializerOptions {
+                    WriteIndented = true
+                };
+                await JsonSerializer.SerializeAsync(fs, list, options);
             }
         }
     }

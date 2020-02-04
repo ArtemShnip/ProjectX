@@ -6,7 +6,7 @@ namespace ProjectX_V._2
 {
     class Program
     {
-        public static Sekundomer sekundomer = new Sekundomer();
+        public static SaveInfo saveInfo = new SaveInfo();
         public static ProgrammInfo info = new ProgrammInfo();
         public static string[] arrayProgramm = { "Calculator.exe", "Illustrator.exe", "Photoshop.exe", "notepad.exe", "HxCalendarAppImm.exe", "mspaint.exe","Telegram.exe" };
         public static string id, nameStarted;
@@ -14,7 +14,7 @@ namespace ProjectX_V._2
         public static void Main(string[] args)
         { 
             ManagementEventWatcher startProgramm = new ManagementEventWatcher(
-                new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace "));
+                new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace"));
             startProgramm.EventArrived += StartProcesses;
             startProgramm.Start();
             ManagementEventWatcher stopProgramm = new ManagementEventWatcher(
@@ -23,7 +23,7 @@ namespace ProjectX_V._2
             stopProgramm.Start();
             Console.WriteLine("          Press ENTER to exit and save");
             Console.ReadLine();
-            sekundomer.StopAndSave();
+            saveInfo.StopAndSave();
             startProgramm.Stop();
             stopProgramm.Stop();
         }
@@ -34,9 +34,8 @@ namespace ProjectX_V._2
             if (Array.Exists(arrayProgramm, element => element == name) && name != nameStarted)
             {
                 id = e.NewEvent.Properties["ProcessId"].Value.ToString();
-                DateTime time = DateTime.Now;
                 Console.WriteLine("start");
-                sekundomer.Start();
+                saveInfo.Start();
                 nameStarted = e.NewEvent.Properties["ProcessName"].Value.ToString();
             }
         }
@@ -46,10 +45,8 @@ namespace ProjectX_V._2
             if (e.NewEvent.Properties["ProcessId"].Value.ToString().Equals(id))
             {
                 nameStarted = "";
-                DateTime time = DateTime.Now;
                 Console.WriteLine("stop");
-                sekundomer.Stop(info, programm , e);
-                
+                saveInfo.Stop(e);
             }
         }
     }

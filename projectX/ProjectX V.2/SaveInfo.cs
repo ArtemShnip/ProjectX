@@ -5,7 +5,7 @@ using System.Management;
 
 namespace ProjectX_V._2
 {
-    class Sekundomer
+    class SaveInfo
     {
         Stopwatch stopwatch = new Stopwatch();
         public static List<ProgrammInfo> list = new List<ProgrammInfo>();
@@ -18,7 +18,7 @@ namespace ProjectX_V._2
             timeStart = time.ToLongTimeString();
         }
 
-        public void Stop(ProgrammInfo info, object programm, EventArrivedEventArgs e)
+        public void Stop(EventArrivedEventArgs e)
         {
             DateTime time = DateTime.Now;
             stopwatch.Stop();
