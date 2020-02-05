@@ -27,7 +27,7 @@ namespace ProjectX_V._2
             list.Add(new ProgrammInfo()
             {
                 Id = e.NewEvent.Properties["ProcessId"].Value.ToString(),
-                NameStart = e.NewEvent.Properties["ProcessName"].Value.ToString(),
+                Name = e.NewEvent.Properties["ProcessName"].Value.ToString(),
                 TimeStart = timeStart,
                 TimeStop = time.ToLongTimeString(),
                 LongTime = ts.ToString()

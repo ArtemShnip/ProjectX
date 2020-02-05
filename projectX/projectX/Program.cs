@@ -1,60 +1,63 @@
 ﻿using System;
 using System.Management;
 using System.Diagnostics;
+using projectX;
 
 namespace ProjectX
 {
     class Program
     {
-        public static  Stopwatch sekundomerCal = new Stopwatch();
-        public static Stopwatch sekundomerAi = new Stopwatch();
-        public static Stopwatch sekundomerPS = new Stopwatch();
+        public static string[] arrayProgramm = { "Calculator.exe", "Illustrator.exe", "Photoshop.exe", "notepad.exe", "HxCalendarAppImm.exe", "mspaint.exe", "Telegram.exe" };
         public static string id;
-        public static string nameTest, idTest, timeTest, parentIdTest, SessionId, CreationDate, Caption;
+        public static Filter filter = new Filter();
+
 
         public static void Main(string[] args)
         {
-            // WHERE ProcessName = \"Illustrator.exe\" 
             ManagementEventWatcher startProgramm = new ManagementEventWatcher(
-                new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace "));
-            startProgramm.EventArrived += startWatch_class;
+                new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace"));
+            startProgramm.EventArrived += StartProcesses;
             startProgramm.Start();
             ManagementEventWatcher stopProgramm = new ManagementEventWatcher(
-                new WqlEventQuery("SELECT * FROM Win32_ProcessStopTrace  "));
-            stopProgramm.EventArrived += stopWatch_class;
+                new WqlEventQuery("SELECT * FROM Win32_ProcessStopTrace"));
+            stopProgramm.EventArrived += StopProcesses;
             stopProgramm.Start();
-            Console.WriteLine("Press ENTER to exit");
+            Console.WriteLine("          Press ENTER to exit and save");
             Console.ReadLine();
             startProgramm.Stop();
             stopProgramm.Stop();
         }
 
-        static void startWatch_class(object programm, EventArrivedEventArgs e)
+        static void StartProcesses(object programm, EventArrivedEventArgs e)
         {
             string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            SessionId = e.NewEvent.Properties["SessionId"].Value.ToString();
-            parentIdTest = e.NewEvent.Properties["ParentProcessId"].Value.ToString();
-            nameTest = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            idTest = e.NewEvent.Properties["ProcessId"].Value.ToString();
-            DateTime time = DateTime.Now;
-            timeTest = time.ToString();
-
-            Console.WriteLine($"START               name    {nameTest}   id    {idTest}   time    {timeTest}   parent   {parentIdTest}   SessionId  {SessionId}   ");
+            if (Array.Exists(arrayProgramm, element => element == name) )
+            {
+                DateTime time = DateTime.Now;
+                string timeStart = time.ToLongTimeString();
+                id = e.NewEvent.Properties["ProcessId"].Value.ToString();
+                Console.WriteLine();
+                Console.WriteLine("Start\n"+name + "  ID: "+id +"  time "+timeStart);
+                //filter.FilterStart(id);
+            }
         }
 
-        static void stopWatch_class(object programm, EventArrivedEventArgs e)
+        static void StopProcesses(object programm, EventArrivedEventArgs e)
         {
             string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            SessionId = e.NewEvent.Properties["SessionId"].Value.ToString();
-            parentIdTest = e.NewEvent.Properties["ParentProcessId"].Value.ToString();
-            nameTest = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            idTest = e.NewEvent.Properties["ProcessId"].Value.ToString();
-            DateTime time = DateTime.Now;
-            timeTest = time.ToString();
-
-            Console.WriteLine($"STOP               name    {nameTest}   id    {idTest}   time    {timeTest}   parent   {parentIdTest}   SessionId  {SessionId} ");
+            if (Array.Exists(arrayProgramm, element => element == name))
+            {
+                DateTime time = DateTime.Now;
+                string timeStart = time.ToLongTimeString();
+                id = e.NewEvent.Properties["ProcessId"].Value.ToString();
+                Console.WriteLine();
+                Console.WriteLine("Stop\n"+name + "  ID: "+id + "  time " + timeStart);
+                //filter.FilterStart(id);
+            }
+            //if (e.NewEvent.Properties["ProcessId"].Value.ToString().Equals(id))
+            //{
+            //    filter.FilterStop(id);
+            //}
         }
-
-       
     }
 }

@@ -35,8 +35,8 @@ namespace ProjectX_V._2
             {
                 id = e.NewEvent.Properties["ProcessId"].Value.ToString();
                 Console.WriteLine("start");
-                saveInfo.Start();
                 nameStarted = e.NewEvent.Properties["ProcessName"].Value.ToString();
+                saveInfo.Start();
             }
         }
 
