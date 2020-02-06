@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Management;
 
 
@@ -6,10 +7,9 @@ namespace ProjectX_V._2
 {
     class Program
     {
-        public static SaveInfo saveInfo = new SaveInfo();
-        public static ProgrammInfo info = new ProgrammInfo();
+        public static SaveList SaveList = new SaveList();
         public static string[] arrayProgramm = { "Calculator.exe", "Illustrator.exe", "Photoshop.exe", "notepad.exe", "HxCalendarAppImm.exe", "mspaint.exe","Telegram.exe" };
-        public static string id, nameStarted;
+        public static Dictionary<string, string> runnedProgramms = new Dictionary<string, string>();
 
         public static void Main(string[] args)
         { 
@@ -23,7 +23,7 @@ namespace ProjectX_V._2
             stopProgramm.Start();
             Console.WriteLine("          Press ENTER to exit and save");
             Console.ReadLine();
-            saveInfo.StopAndSave();
+            SaveList.StopAndSave();
             startProgramm.Stop();
             stopProgramm.Stop();
         }
@@ -31,22 +31,28 @@ namespace ProjectX_V._2
         static void StartProcesses(object programm, EventArrivedEventArgs e)
         {
             string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            if (Array.Exists(arrayProgramm, element => element == name) && name != nameStarted)
+            if (Array.Exists(arrayProgramm, element => element == name) && runnedProgramms.ContainsValue(name) == false)
             {
-                id = e.NewEvent.Properties["ProcessId"].Value.ToString();
-                Console.WriteLine("start");
-                nameStarted = e.NewEvent.Properties["ProcessName"].Value.ToString();
-                saveInfo.Start();
+                DateTime time = DateTime.Now;
+                string t = time.ToString("g");
+                string id = e.NewEvent.Properties["ProcessId"].Value.ToString();
+                runnedProgramms.Add(id, name);
+                Console.WriteLine("Start\n" + name + "  ID: " + id + "  time " + t);
+                SaveList.Save(id);
             }
         }
 
         static void StopProcesses(object programm, EventArrivedEventArgs e)
         {
-            if (e.NewEvent.Properties["ProcessId"].Value.ToString().Equals(id))
+            string id = e.NewEvent.Properties["ProcessId"].Value.ToString();
+            if (runnedProgramms.ContainsKey(id))
             {
-                nameStarted = "";
-                Console.WriteLine("stop");
-                saveInfo.Stop(e);
+                DateTime time = DateTime.Now;
+                string t = time.ToString("g");
+                string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
+                Console.WriteLine("Stop\n" + name + "  ID: " + id + "  time " + t);
+                runnedProgramms.Remove(id);
+                SaveList.AddInSave(t,id);
             }
         }
     }

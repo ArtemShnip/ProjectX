@@ -2,13 +2,14 @@
 using System.Management;
 using System.Diagnostics;
 using projectX;
+using System.Collections.Generic;
 
 namespace ProjectX
 {
     class Program
     {
         public static string[] arrayProgramm = { "Calculator.exe", "Illustrator.exe", "Photoshop.exe", "notepad.exe", "HxCalendarAppImm.exe", "mspaint.exe", "Telegram.exe" };
-        public static string id;
+        public static Dictionary<string, string> runnedProgramms = new Dictionary<string,string>();
         public static Filter filter = new Filter();
 
 
@@ -34,30 +35,24 @@ namespace ProjectX
             if (Array.Exists(arrayProgramm, element => element == name) )
             {
                 DateTime time = DateTime.Now;
-                string timeStart = time.ToLongTimeString();
-                id = e.NewEvent.Properties["ProcessId"].Value.ToString();
-                Console.WriteLine();
-                Console.WriteLine("Start\n"+name + "  ID: "+id +"  time "+timeStart);
-                //filter.FilterStart(id);
+                string t = time.ToString("g");
+                Console.WriteLine(t);
+                string id = e.NewEvent.Properties["ProcessId"].Value.ToString();
+                runnedProgramms.Add(id, t);
+                Console.WriteLine("Start\n" + name + "  ID: " + id + "  time " + t);
             }
         }
 
         static void StopProcesses(object programm, EventArrivedEventArgs e)
         {
-            string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            if (Array.Exists(arrayProgramm, element => element == name))
+            string id = e.NewEvent.Properties["ProcessId"].Value.ToString();
+            if (runnedProgramms.ContainsKey(id))
             {
                 DateTime time = DateTime.Now;
-                string timeStart = time.ToLongTimeString();
-                id = e.NewEvent.Properties["ProcessId"].Value.ToString();
-                Console.WriteLine();
-                Console.WriteLine("Stop\n"+name + "  ID: "+id + "  time " + timeStart);
-                //filter.FilterStart(id);
+                string t = time.ToString("g");
+                string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
+                Console.WriteLine("Stop\n" + name + "  ID: " + id + "  time " + t);
             }
-            //if (e.NewEvent.Properties["ProcessId"].Value.ToString().Equals(id))
-            //{
-            //    filter.FilterStop(id);
-            //}
         }
     }
 }

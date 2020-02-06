@@ -15,17 +15,17 @@ namespace ProjectX_V._2
         public string Name { get; set; }
 
         [DataMember]
-        public string TimeStart { get; set; }
+        public DateTime TimeStart { get; set; }
 
         [DataMember]
-        public string TimeStop { get; set; }
+        public DateTime TimeStop { get; set; }
 
         [DataMember]
-        public string LongTime { get; set; }
+        public TimeSpan LongTime { get; set; }
 
         public override string ToString()
         {
-            return $"\n ID - {Id}\n name start - {Name}\n  time start - {TimeStart}\n time stop - {TimeStop}\n sekundomer - {LongTime}";
+            return $"\n ID - {Id}\n name start - {Name}\n  time start - {TimeStart}\n time stop - {TimeStop}\n longtime - {LongTime}";
         }
     }
 }
