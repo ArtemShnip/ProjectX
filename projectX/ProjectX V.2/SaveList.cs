@@ -1,7 +1,9 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
+using System.Text.Json;
 
 namespace ProjectX_V._2
 {
@@ -11,17 +13,6 @@ namespace ProjectX_V._2
 
         public void Save(string id)
         {
-            
-            //try
-            //{
-            //    var proc = Process.GetProcessById(int.Parse(id));
-            //}
-            //catch (ArgumentException e)
-            //{
-            //    Console.WriteLine(e.Message);
-            //}
-           
-
             var proc = Process.GetProcessById(int.Parse(id));
             list.Add(new ProgrammInfo()
             {
@@ -37,7 +28,7 @@ namespace ProjectX_V._2
             DateTime time = DateTime.Now;
             int index = list.FindIndex(x =>string.Equals(x.Id, id, StringComparison.CurrentCultureIgnoreCase));
             list[index].TimeStop = time.ToLocalTime();
-            list[index].LongTime = time.ToLocalTime().Subtract(list[index].TimeStart);
+            list[index].LongTime = time.ToLocalTime().Subtract(list[index].TimeStart).ToString("h':'m':'s");
             Console.WriteLine("This AddedInSave");
             Console.WriteLine(list[index].ToString());
         }

@@ -21,11 +21,15 @@ namespace ProjectX_V._2
         public DateTime TimeStop { get; set; }
 
         [DataMember]
-        public TimeSpan LongTime { get; set; }
+        public string LongTime { get; set; }
 
         public override string ToString()
         {
             return $"\n ID - {Id}\n name start - {Name}\n  time start - {TimeStart}\n time stop - {TimeStop}\n longtime - {LongTime}";
+        }
+        public ProgrammInfo()
+        {
+
         }
     }
 }

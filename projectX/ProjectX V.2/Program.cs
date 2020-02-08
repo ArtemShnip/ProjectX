@@ -9,7 +9,8 @@ namespace ProjectX_V._2
     {
         public static SaveList SaveList = new SaveList();
         public static string[] arrayProgramm = { "Calculator.exe", "Illustrator.exe", "Photoshop.exe", "notepad.exe", "HxCalendarAppImm.exe", "mspaint.exe","Telegram.exe" };
-        public static Dictionary<string, string> runnedProgramms = new Dictionary<string, string>();
+        public static Dictionary
+            <string, string> runnedProgramms = new Dictionary<string, string>();
 
         public static void Main(string[] args)
         { 
@@ -30,6 +31,7 @@ namespace ProjectX_V._2
 
         static void StartProcesses(object programm, EventArrivedEventArgs e)
         {
+            test.Des();
             string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
             if (Array.Exists(arrayProgramm, element => element == name) && runnedProgramms.ContainsValue(name) == false)
             {
