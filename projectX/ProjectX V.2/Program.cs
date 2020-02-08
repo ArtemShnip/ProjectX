@@ -30,7 +30,6 @@ namespace ProjectX_V._2
 
         static void StartProcesses(object programm, EventArrivedEventArgs e)
         {
-            test.Des();
             string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
             if (Array.Exists(arrayProgramm, element => element == name) && runnedProgramms.ContainsValue(name) == false)
             {
