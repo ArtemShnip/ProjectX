@@ -27,9 +27,5 @@ namespace ProjectX_V._2
         {
             return $"\n ID - {Id}\n name start - {Name}\n  time start - {TimeStart}\n time stop - {TimeStop}\n longtime - {LongTime}";
         }
-        public ProgrammInfo()
-        {
-
-        }
     }
 }

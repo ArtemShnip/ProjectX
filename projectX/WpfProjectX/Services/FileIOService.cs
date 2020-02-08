@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,12 +20,25 @@ namespace WpfProjectX.Services
         }
         public BindingList<ProgramModel> LoadDate()
         {
-            return null;
+            var fileExists = File.Exists(_path);
+            if (!fileExists)
+            {
+                File.CreateText(_path).Dispose();
+                return new BindingList<ProgramModel>();
+            }
+            using (var reader = File.OpenText(_path))
+            {
+                var fileText = reader.ReadToEnd();
+                return JsonConvert.DeserializeObject<BindingList<ProgramModel>>(fileText);
+            }
         }
-
-        public void SaveDate(BindingList<ProgramModel> _programModelsList)
+        public void SaveDate(object programModelsList)
         {
-
+            using (StreamWriter writer = File.CreateText(_path))
+            {
+                string output = JsonConvert.SerializeObject(programModelsList);
+                writer.Write(output);
+            }
         }
     }
 }
