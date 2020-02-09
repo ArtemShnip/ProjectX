@@ -17,7 +17,6 @@ namespace WpfProjectX.ProgramModels
         private string _longTime;
         private string _client;
 
-
         public string Id
         {
             get { return _id; }
@@ -54,7 +53,6 @@ namespace WpfProjectX.ProgramModels
             get { return _longTime; }
             set { _longTime = value; }
         }
-
 
         public string Client
         {

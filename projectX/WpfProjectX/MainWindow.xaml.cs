@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,6 +18,7 @@ using System.Windows.Shapes;
 using WpfProjectX.ProgramModels;
 using WpfProjectX.Services;
 using WpfProjectX.Watcher;
+using ProjectX_V._2;
 
 namespace WpfProjectX
 {
@@ -28,10 +30,10 @@ namespace WpfProjectX
         private readonly string _path = $"{Environment.CurrentDirectory}\\programDataList.json";
         private BindingList<ProgramModel> _programModelsList;
         private FileIOService _fileIOservice;
-        private ProgramWatcher _programWather;
 
         public MainWindow()
         {
+            
             InitializeComponent();
         }
 
@@ -48,9 +50,13 @@ namespace WpfProjectX
                 Close();
             }
             dgTodoList.ItemsSource = _programModelsList;
-
+            ProgramWatcher _programWatcher = new ProgramWatcher();
+            //Thread thread = new Thread(_programWatcher.Wather);
+            //thread.Start();
+            Parallel.Invoke(_programWatcher.Wather);
             _programModelsList.ListChanged += _programModelsList_ListChanged;
         }
+
         public void Save(string id)
         {
             var proc = Process.GetProcessById(int.Parse(id));
@@ -65,10 +71,10 @@ namespace WpfProjectX
         public void AddInSave(string time1, string id)
         {
             DateTime time = DateTime.Now;
-            int index = _programModelsList.First(x => string.Equals(x.Id, id, StringComparison.CurrentCultureIgnoreCase));
-            _programModelsList[index].TimeStop = time.ToLocalTime();
-            _programModelsList[index].LongTime = time.ToLocalTime().Subtract(_programModelsList[index].TimeStart).ToString("h':'m':'s");
-            Console.WriteLine(_programModelsList[index].ToString());
+            //int index = _programModelsList.IndexOf(x => x.Id == id);
+            //_programModelsList[index].TimeStop = time.ToLocalTime();
+            //_programModelsList[index].LongTime = time.ToLocalTime().Subtract(_programModelsList[index].TimeStart).ToString("h':'m':'s");
+            //Console.WriteLine(_programModelsList[index].ToString());
         }
 
         private void _programModelsList_ListChanged(object sender, ListChangedEventArgs e)
