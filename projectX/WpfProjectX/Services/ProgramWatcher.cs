@@ -1,15 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Management;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using WpfProjectX.Services;
-using Newtonsoft.Json;
-using System.ComponentModel;
-using System.IO;
-using WpfProjectX.ProgramModels;
 using System.Threading;
 
 namespace WpfProjectX.Watcher
@@ -18,9 +10,12 @@ namespace WpfProjectX.Watcher
     {
         public static string[] arrayProgramm = { "Calculator.exe", "Illustrator.exe", "Photoshop.exe", "notepad.exe", "HxCalendarAppImm.exe", "mspaint.exe","Telegram.exe" };
         public static Dictionary<string, string> runnedProgramms = new Dictionary<string, string>();
-        private static MainWindow _mainWindow;
+        public delegate void EventWatch(string id);
+        //public delegate void EventWatch2(string id, string time);
+        public event EventWatch NotifyStart, NotifyStop;
+        //public event EventWatch2 ;
 
-       public async void Wather()
+        public async void Wather()
        {
             await Task.Run(() =>
             {
@@ -33,44 +28,32 @@ namespace WpfProjectX.Watcher
                 stopProgramm.EventArrived += StopProcesses;
                 stopProgramm.Start();
                 Console.WriteLine("          Press ENTER to exit and save");
-                Task.WaitAll();    //partially solved the problem, not notice "Console.ReadLine();"
+                Thread.Sleep(2147483647);                                                   //partially solved the problem
                 startProgramm.Stop();
-                stopProgramm.Stop(); 
-
-
+                stopProgramm.Stop();
             });
        }
 
         void StartProcesses(object programm, EventArrivedEventArgs e)
         {
-            string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            if (Array.Exists(arrayProgramm, element => element == name) && runnedProgramms.ContainsValue(name) == false)
+            string name = e.NewEvent.Properties["ProcessName"].Value.ToString();                                        // получаю имя запущеного процесса
+            if (Array.Exists(arrayProgramm, element => element == name) && !runnedProgramms.ContainsValue(name))        // смотрю есть ли этот процесс в массиве
             {
-                DateTime time = DateTime.Now;
-                string t = time.ToString("g");
-                string id = e.NewEvent.Properties["ProcessId"].Value.ToString();
-                runnedProgramms.Add(id, name);
-                Console.WriteLine("Start\n" + name + "  ID: " + id + "  time " + t);
-
-                try
-                {
-                    _mainWindow.Save(id); //  +		$exception	{"Ссылка на объект не указывает на экземпляр объекта."}	System.NullReferenceException
-                }
-                catch (Exception) { }
+                string id = e.NewEvent.Properties["ProcessId"].Value.ToString();                                        // получаю Id запущенного процесса
+                runnedProgramms.Add(id, name);                                                                          // добавляю в коллекцию запущенных программ Name & Id
+                NotifyStart?.Invoke(id);
             }
         }
 
         void StopProcesses(object programm, EventArrivedEventArgs e)
         {
-            string idS = e.NewEvent.Properties["ProcessId"].Value.ToString();
-            if (runnedProgramms.ContainsKey(idS))
+            string id = e.NewEvent.Properties["ProcessId"].Value.ToString();                                            // смотрю Id остановившегося процесса
+            if (runnedProgramms.ContainsKey(id))                                                                        // смотрю есть ли такой Id в колекции запущенных программ
             {
-                DateTime time = DateTime.Now;
-                string t = time.ToString("g");
-                string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
-                Console.WriteLine("Stop\n" + name + "  ID: " + idS + "  time " + t);
-                runnedProgramms.Remove(idS);
-                _mainWindow.AddInSave(t, idS);
+                DateTime time = DateTime.Now;                                                                           // потом уберу
+                string t = time.ToString("g");                                                                          // получаю время завершения процесса
+                runnedProgramms.Remove(id);                                                                             // удаляю из коллекции остановившуюся программу
+                NotifyStop?.Invoke(id);
             }
         }
     }

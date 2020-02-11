@@ -1,24 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using WpfProjectX.ProgramModels;
 using WpfProjectX.Services;
 using WpfProjectX.Watcher;
-using ProjectX_V._2;
 
 namespace WpfProjectX
 {
@@ -29,11 +16,11 @@ namespace WpfProjectX
     {
         private readonly string _path = $"{Environment.CurrentDirectory}\\programDataList.json";
         private BindingList<ProgramModel> _programModelsList;
+
         private FileIOService _fileIOservice;
 
         public MainWindow()
         {
-            
             InitializeComponent();
         }
 
@@ -51,30 +38,47 @@ namespace WpfProjectX
             }
             dgTodoList.ItemsSource = _programModelsList;
             ProgramWatcher _programWatcher = new ProgramWatcher();
-            //Thread thread = new Thread(_programWatcher.Wather);
-            //thread.Start();
-            Parallel.Invoke(_programWatcher.Wather);
+            Thread thread = new Thread(_programWatcher.Wather);
+            thread.Start();
+            _programWatcher.NotifyStart += Save;
+            _programWatcher.NotifyStop += AddInSave;
+            //_programModelsList.ListChanged += _programModelsList_ListChanged;          
+        }
+
+        public void Save(string id)                                // не добавляет в Bindinglist, проблема в потоках или в Loaded="Window_Loaded"(MainWindow.xaml)? 
+        {
+            int e = 6;
+            var proc = Process.GetProcessById(int.Parse(id));                            // получаю процесс по Id
+            _programModelsList = new BindingList<ProgramModel>()                         // добавляю в _programModelsList
+            {
+                new ProgramModel()
+                {
+                    Id = id,                                                             // полученный Id
+                    Name = proc.ProcessName,                                             // короткое имя
+                    TimeStart = proc.StartTime                                           // время запуска процесса
+                }
+            };
+            dgTodoList.ItemsSource = _programModelsList;
             _programModelsList.ListChanged += _programModelsList_ListChanged;
         }
-
-        public void Save(string id)
-        {
-            var proc = Process.GetProcessById(int.Parse(id));
-            _programModelsList.Add(new ProgramModel()
-            {
-                Id = id,
-                Name = proc.ProcessName,
-                TimeStart = proc.StartTime
-            });
-        }
-
-        public void AddInSave(string time1, string id)
+        int index;
+        public void AddInSave(string id)
         {
             DateTime time = DateTime.Now;
-            //int index = _programModelsList.IndexOf(x => x.Id == id);
-            //_programModelsList[index].TimeStop = time.ToLocalTime();
-            //_programModelsList[index].LongTime = time.ToLocalTime().Subtract(_programModelsList[index].TimeStart).ToString("h':'m':'s");
-            //Console.WriteLine(_programModelsList[index].ToString());
+            
+            //for (int i = 0; i < _programModelsList.Count; i++)
+            //{
+            //    string q =_programModelsList[i].Id;
+            //    if (q.Equals(id))
+            //    {
+            //        index = int.Parse(q);
+            //    }
+            //}
+            //int index = _programModelsList.IndexOf(id);                                // ищу индекс в _programModelsList где Id равен полученному Id завершенного процесса
+            _programModelsList[index].TimeStop = time.ToLocalTime();                     // добавляю время завершения процесса
+            _programModelsList[index].LongTime =
+                time.ToLocalTime().Subtract(_programModelsList[index].
+                TimeStart).ToString("h':'m':'s");
         }
 
         private void _programModelsList_ListChanged(object sender, ListChangedEventArgs e)
@@ -91,6 +95,11 @@ namespace WpfProjectX
                     Close();
                 }
             }
+        }
+
+        private void Window_Loaded_1(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

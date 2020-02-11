@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfProjectX"
         mc:Ignorable="d"
-        Title="ProjectX" Height="450" Width="885" Loaded="Window_Loaded" Foreground="Black">
+        Title="ProjectX" Height="450" Width="885" Loaded="Window_Loaded"  Foreground="Black">
     <Grid>
         <DataGrid x:Name ="dgTodoList" FontSize="16" Margin="5" AutoGenerateColumns="False">
             <DataGrid.Columns>
