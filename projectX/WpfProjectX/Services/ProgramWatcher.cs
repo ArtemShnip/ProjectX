@@ -50,8 +50,6 @@ namespace WpfProjectX.Watcher
             string id = e.NewEvent.Properties["ProcessId"].Value.ToString();                                            // смотрю Id остановившегося процесса
             if (runnedProgramms.ContainsKey(id))                                                                        // смотрю есть ли такой Id в колекции запущенных программ
             {
-                DateTime time = DateTime.Now;                                                                           // потом уберу
-                string t = time.ToString("g");                                                                          // получаю время завершения процесса
                 runnedProgramms.Remove(id);                                                                             // удаляю из коллекции остановившуюся программу
                 NotifyStop?.Invoke(id);
             }

@@ -4,8 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfProjectX"
+        xmlns:programmodels="clr-namespace:WpfProjectX.ProgramModels"
         mc:Ignorable="d"
+        
         Title="ProjectX" Height="450" Width="885" Loaded="Window_Loaded"  Foreground="Black">
+    <Window.DataContext>
+        <programmodels:ProgramModel/>
+    </Window.DataContext>
     <Grid>
         <DataGrid x:Name ="dgTodoList" FontSize="16" Margin="5" AutoGenerateColumns="False">
             <DataGrid.Columns>

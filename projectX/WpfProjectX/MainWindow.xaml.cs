@@ -16,7 +16,6 @@ namespace WpfProjectX
     {
         private readonly string _path = $"{Environment.CurrentDirectory}\\programDataList.json";
         private BindingList<ProgramModel> _programModelsList;
-
         private FileIOService _fileIOservice;
 
         public MainWindow()
@@ -36,54 +35,47 @@ namespace WpfProjectX
                 MessageBox.Show(ex.Message);
                 Close();
             }
-            dgTodoList.ItemsSource = _programModelsList;
+
+            _programModelsList.Add(
+             new ProgramModel()
+             {
+                 Id = "jjjj",
+                 Name = "ferfr"
+             });
+
             ProgramWatcher _programWatcher = new ProgramWatcher();
             Thread thread = new Thread(_programWatcher.Wather);
             thread.Start();
-            _programWatcher.NotifyStart += Save;
+            _programWatcher.NotifyStart += AddNew;
             _programWatcher.NotifyStop += AddInSave;
-            //_programModelsList.ListChanged += _programModelsList_ListChanged;          
-        }
-
-        public void Save(string id)                                // не добавляет в Bindinglist, проблема в потоках или в Loaded="Window_Loaded"(MainWindow.xaml)? 
-        {
-            int e = 6;
-            var proc = Process.GetProcessById(int.Parse(id));                            // получаю процесс по Id
-            _programModelsList = new BindingList<ProgramModel>()                         // добавляю в _programModelsList
-            {
-                new ProgramModel()
-                {
-                    Id = id,                                                             // полученный Id
-                    Name = proc.ProcessName,                                             // короткое имя
-                    TimeStart = proc.StartTime                                           // время запуска процесса
-                }
-            };
-            dgTodoList.ItemsSource = _programModelsList;
             _programModelsList.ListChanged += _programModelsList_ListChanged;
         }
-        int index;
+
+        public void AddNew(string id)
+        {
+            var proc = Process.GetProcessById(int.Parse(id));
+            _programModelsList.Add(
+             new ProgramModel()
+             {
+                 Id = id,
+                 Name = proc.ProcessName,
+                 TimeStart = proc.StartTime
+             });
+            _programModelsList.ListChanged += _programModelsList_ListChanged;
+        }
         public void AddInSave(string id)
         {
             DateTime time = DateTime.Now;
-            
-            //for (int i = 0; i < _programModelsList.Count; i++)
-            //{
-            //    string q =_programModelsList[i].Id;
-            //    if (q.Equals(id))
-            //    {
-            //        index = int.Parse(q);
-            //    }
-            //}
-            //int index = _programModelsList.IndexOf(id);                                // ищу индекс в _programModelsList где Id равен полученному Id завершенного процесса
-            _programModelsList[index].TimeStop = time.ToLocalTime();                     // добавляю время завершения процесса
+            int index = 222; //_programModelsList.IndexOf(id);
+            _programModelsList[index].TimeStop = time.ToLocalTime();
             _programModelsList[index].LongTime =
                 time.ToLocalTime().Subtract(_programModelsList[index].
                 TimeStart).ToString("h':'m':'s");
         }
 
-        private void _programModelsList_ListChanged(object sender, ListChangedEventArgs e)
+        public void _programModelsList_ListChanged(object sender, ListChangedEventArgs e)
         {
-            if (e.ListChangedType== ListChangedType.ItemAdded|| e.ListChangedType == ListChangedType.ItemDeleted || e.ListChangedType == ListChangedType.ItemChanged)
+            if (e.ListChangedType == ListChangedType.ItemAdded || e.ListChangedType == ListChangedType.ItemDeleted || e.ListChangedType == ListChangedType.ItemChanged)
             {
                 try
                 {
@@ -95,11 +87,6 @@ namespace WpfProjectX
                     Close();
                 }
             }
-        }
-
-        private void Window_Loaded_1(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
