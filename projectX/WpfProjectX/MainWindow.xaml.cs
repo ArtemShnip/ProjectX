@@ -46,6 +46,7 @@ namespace WpfProjectX
             ProgramWatcher _programWatcher = new ProgramWatcher();
             Thread thread = new Thread(_programWatcher.Wather);
             thread.Start();
+            //dgTodoList.ItemsSource = _programModelsList; // если без этого то сохраняет в json и можно сортировать,но не отображает в таблице
             _programWatcher.NotifyStart += AddNew;
             _programWatcher.NotifyStop += AddInSave;
             _programModelsList.ListChanged += _programModelsList_ListChanged;
