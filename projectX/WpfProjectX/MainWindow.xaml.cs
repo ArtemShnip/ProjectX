@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using WpfProjectX.ProgramModels;
@@ -37,22 +38,12 @@ namespace WpfProjectX
                 MessageBox.Show(ex.Message);
                 Close();
             }
-
-            _programModelsList.Add(
-             new ProgramModel()
-             {
-                 Id = "jjjj",
-                 Name = "ferfr"
-             });
-            ProgramModel programModel = new ProgramModel();
-
             ProgramWatcher _programWatcher = new ProgramWatcher();
             Thread thread = new Thread(_programWatcher.Wather);
             thread.Start();
-            dgTodoList.DataContext = _programModelsList; // если без этого то сохраняет в json и можно сортировать,но не отображает в таблице
+            dgTodoList.DataContext = _programModelsList;
             _programWatcher.NotifyStart += AddNew;
             _programWatcher.NotifyStop += AddInSave;
-            //_programModelsList.ListChanged += _programModelsList_ListChanged;
             _programModelsList.CollectionChanged += _programModelsList_CollectionChanged;
         }
 
@@ -66,32 +57,17 @@ namespace WpfProjectX
                  Name = proc.ProcessName,
                  TimeStart = proc.StartTime
              });
-            //_programModelsList.ListChanged += _programModelsList_ListChanged;
-        }
-        public void AddInSave(string id)
-        {
-            //DateTime time = DateTime.Now;
-            //int index = 222; //_programModelsList.IndexOf(id);
-            //_programModelsList[index].TimeStop = time.ToLocalTime();
-            //_programModelsList[index].LongTime =
-            //    time.ToLocalTime().Subtract(_programModelsList[index].
-            //    TimeStart).ToString("h':'m':'s");
         }
 
-        public void _programModelsList_ListChanged(object sender, ListChangedEventArgs e)
+        public void AddInSave(string id)
         {
-            if (e.ListChangedType == ListChangedType.ItemAdded || e.ListChangedType == ListChangedType.ItemDeleted || e.ListChangedType == ListChangedType.ItemChanged)
-            {
-                try
-                {
-                    _fileIOservice.SaveDate(sender);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    Close();
-                }
-            }
+            var element = _programModelsList.First(f => f.Id == id);
+            var index = _programModelsList.IndexOf(element);
+            DateTime time = DateTime.Now;
+            _programModelsList[index].TimeStop = time.ToLocalTime();
+            _programModelsList[index].LongTime =
+            time.ToLocalTime().Subtract(_programModelsList[index].
+            TimeStart).ToString("h':'m':'s");
         }
 
         private void _programModelsList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
