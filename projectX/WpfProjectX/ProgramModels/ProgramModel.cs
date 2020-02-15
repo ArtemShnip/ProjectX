@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace WpfProjectX.ProgramModels
 {
     class ProgramModel : INotifyPropertyChanged
     {
+        private ObservableCollection<ProgramModel> _programModelsList;
         private string _id;
         private string _name;
         private DateTime _date;
@@ -22,7 +24,13 @@ namespace WpfProjectX.ProgramModels
         public string Name
         {
             get { return _name; }
-            set { _name = value; }
+            set
+            {
+                if (_name == value)
+                    return;
+                _name = value;
+                OnPropertyChanged("Client");
+            }
         }
 
         public DateTime Date
@@ -59,6 +67,18 @@ namespace WpfProjectX.ProgramModels
                     return;
                 _client = value;
                 OnPropertyChanged("Client");
+            }
+        }
+        public ObservableCollection<ProgramModel> ProgramModels
+        {
+            get
+            {
+                return _programModelsList;
+            }
+            set
+            {
+                _programModelsList = value;
+                OnPropertyChanged();
             }
         }
 

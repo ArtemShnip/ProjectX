@@ -44,6 +44,7 @@ namespace WpfProjectX
                  Id = "jjjj",
                  Name = "ferfr"
              });
+            ProgramModel programModel = new ProgramModel();
 
             ProgramWatcher _programWatcher = new ProgramWatcher();
             Thread thread = new Thread(_programWatcher.Wather);
@@ -54,8 +55,6 @@ namespace WpfProjectX
             //_programModelsList.ListChanged += _programModelsList_ListChanged;
             _programModelsList.CollectionChanged += _programModelsList_CollectionChanged;
         }
-
-        
 
         public void AddNew(string id)
         {
