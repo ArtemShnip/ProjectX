@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
@@ -15,7 +17,7 @@ namespace WpfProjectX
     public partial class MainWindow : Window
     {
         private readonly string _path = $"{Environment.CurrentDirectory}\\programDataList.json";
-        private BindingList<ProgramModel> _programModelsList;
+        private ObservableCollection<ProgramModel> _programModelsList;
         private FileIOService _fileIOservice;
 
         public MainWindow()
@@ -49,8 +51,11 @@ namespace WpfProjectX
             dgTodoList.DataContext = _programModelsList; // если без этого то сохраняет в json и можно сортировать,но не отображает в таблице
             _programWatcher.NotifyStart += AddNew;
             _programWatcher.NotifyStop += AddInSave;
-            _programModelsList.ListChanged += _programModelsList_ListChanged;
+            //_programModelsList.ListChanged += _programModelsList_ListChanged;
+            _programModelsList.CollectionChanged += _programModelsList_CollectionChanged;
         }
+
+        
 
         public void AddNew(string id)
         {
@@ -62,7 +67,7 @@ namespace WpfProjectX
                  Name = proc.ProcessName,
                  TimeStart = proc.StartTime
              });
-            _programModelsList.ListChanged += _programModelsList_ListChanged;
+            //_programModelsList.ListChanged += _programModelsList_ListChanged;
         }
         public void AddInSave(string id)
         {
@@ -77,6 +82,22 @@ namespace WpfProjectX
         public void _programModelsList_ListChanged(object sender, ListChangedEventArgs e)
         {
             if (e.ListChangedType == ListChangedType.ItemAdded || e.ListChangedType == ListChangedType.ItemDeleted || e.ListChangedType == ListChangedType.ItemChanged)
+            {
+                try
+                {
+                    _fileIOservice.SaveDate(sender);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    Close();
+                }
+            }
+        }
+
+        private void _programModelsList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Remove || e.Action == NotifyCollectionChangedAction.Replace)
             {
                 try
                 {

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using WpfProjectX.ProgramModels;
@@ -13,18 +14,18 @@ namespace WpfProjectX.Services
         {
             _path = path;
         }
-        public BindingList<ProgramModel> LoadDate()
+        public ObservableCollection<ProgramModel> LoadDate()
         {
             var fileExists = File.Exists(_path);
             if (!fileExists)
             {
                 File.CreateText(_path).Dispose();
-                return new BindingList<ProgramModel>();
+                return new ObservableCollection<ProgramModel>();
             }
             using (var reader = File.OpenText(_path))
             {
                 var fileText = reader.ReadToEnd();
-                return JsonConvert.DeserializeObject<BindingList<ProgramModel>>(fileText);
+                return JsonConvert.DeserializeObject<ObservableCollection<ProgramModel>>(fileText);
             }
         }
         public void SaveDate(object programModelsList)
