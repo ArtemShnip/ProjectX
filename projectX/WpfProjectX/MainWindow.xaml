@@ -8,11 +8,9 @@
         mc:Ignorable="d"
         
         Title="ProjectX" Height="450" Width="885" Loaded="Window_Loaded"  Foreground="Black">
-    <Window.DataContext>
-        <programmodels:ProgramModel/>
-    </Window.DataContext>
+    
     <Grid>
-        <DataGrid x:Name ="dgTodoList" FontSize="16" Margin="5" AutoGenerateColumns="False">
+        <DataGrid x:Name ="dgTodoList" ItemsSource="{Binding}" FontSize="16" Margin="5" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Path= Id}" IsReadOnly="True" Header="ID" Width="25"/>
                 <DataGridTextColumn Binding="{Binding Path= Date}" IsReadOnly="True" Header="Date" Width="100"/>

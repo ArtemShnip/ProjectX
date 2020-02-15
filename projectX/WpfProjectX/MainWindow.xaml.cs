@@ -46,7 +46,7 @@ namespace WpfProjectX
             ProgramWatcher _programWatcher = new ProgramWatcher();
             Thread thread = new Thread(_programWatcher.Wather);
             thread.Start();
-            //dgTodoList.ItemsSource = _programModelsList; // если без этого то сохраняет в json и можно сортировать,но не отображает в таблице
+            dgTodoList.DataContext = _programModelsList; // если без этого то сохраняет в json и можно сортировать,но не отображает в таблице
             _programWatcher.NotifyStart += AddNew;
             _programWatcher.NotifyStop += AddInSave;
             _programModelsList.ListChanged += _programModelsList_ListChanged;
@@ -66,12 +66,12 @@ namespace WpfProjectX
         }
         public void AddInSave(string id)
         {
-            DateTime time = DateTime.Now;
-            int index = 222; //_programModelsList.IndexOf(id);
-            _programModelsList[index].TimeStop = time.ToLocalTime();
-            _programModelsList[index].LongTime =
-                time.ToLocalTime().Subtract(_programModelsList[index].
-                TimeStart).ToString("h':'m':'s");
+            //DateTime time = DateTime.Now;
+            //int index = 222; //_programModelsList.IndexOf(id);
+            //_programModelsList[index].TimeStop = time.ToLocalTime();
+            //_programModelsList[index].LongTime =
+            //    time.ToLocalTime().Subtract(_programModelsList[index].
+            //    TimeStart).ToString("h':'m':'s");
         }
 
         public void _programModelsList_ListChanged(object sender, ListChangedEventArgs e)
