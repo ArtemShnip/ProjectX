@@ -59,6 +59,7 @@ namespace WpfProjectX
         public void AddNew(string id)
         {
             var proc = Process.GetProcessById(int.Parse(id));
+            string ff =proc.MainModule.FileName;    //get the path
             DateTime date = DateTime.Now;
             var procStart = proc.StartTime;
             _programModelsList.Add(
