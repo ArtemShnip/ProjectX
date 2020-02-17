@@ -17,7 +17,7 @@ namespace WpfProjectX
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly string _path = $"{Environment.CurrentDirectory}\\programDataList.json";
+        private readonly string _path = $"{Environment.CurrentDirectory}\\SaveData\\programDataList.json";
         private ObservableCollection<ProgramModel> _programModelsList;
         private FileIOService _fileIOservice;
 
@@ -35,8 +35,9 @@ namespace WpfProjectX
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
-                Close();
+                Loger.WriteLog(ex);
+                MessageBox.Show("Поврежден файл \"programDataList.json\".");
+                _programModelsList = new ObservableCollection<ProgramModel>();
             }
             ProgramWatcher _programWatcher = new ProgramWatcher();
             Thread thread = new Thread(_programWatcher.Wather);
@@ -44,18 +45,31 @@ namespace WpfProjectX
             dgTodoList.DataContext = _programModelsList;
             _programWatcher.NotifyStart += AddNew;
             _programWatcher.NotifyStop += AddInSave;
-            _programModelsList.CollectionChanged += _programModelsList_CollectionChanged;
+            try
+            {
+                _programModelsList.CollectionChanged += _programModelsList_CollectionChanged;
+            }
+            catch (Exception ex)
+            {
+                Loger.WriteLog(ex);
+                MessageBox.Show("Поврежден файл \"programDataList.json\".");
+            }
         }
 
         public void AddNew(string id)
         {
             var proc = Process.GetProcessById(int.Parse(id));
+            DateTime date = DateTime.Now;
+            var procStart = proc.StartTime;
             _programModelsList.Add(
              new ProgramModel()
              {
+
                  Id = id,
+                 Date = date.ToShortDateString(),
                  Name = proc.ProcessName,
-                 TimeStart = proc.StartTime
+                 TimeStart = procStart,
+                 ShortTimeStart = procStart.ToShortTimeString()
              });
         }
 
@@ -64,7 +78,7 @@ namespace WpfProjectX
             var element = _programModelsList.First(f => f.Id == id);
             var index = _programModelsList.IndexOf(element);
             DateTime time = DateTime.Now;
-            _programModelsList[index].TimeStop = time.ToLocalTime();
+            _programModelsList[index].TimeStop = time.ToShortTimeString();
             _programModelsList[index].LongTime =
             time.ToLocalTime().Subtract(_programModelsList[index].
             TimeStart).ToString("h':'m':'s");
@@ -72,7 +86,7 @@ namespace WpfProjectX
 
         private void _programModelsList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Remove || e.Action == NotifyCollectionChangedAction.Replace)
+            if (e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Remove || e.Action == NotifyCollectionChangedAction.Reset)
             {
                 try
                 {
@@ -80,10 +94,31 @@ namespace WpfProjectX
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    Loger.WriteLog(ex);
+                    MessageBox.Show("Поврежден файл \"programDataList.json\".");
                     Close();
                 }
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                _fileIOservice.SaveDate(_programModelsList);
+                MessageBox.Show("Изменения сохранены");
+            }
+            catch (Exception ex)
+            {
+                Loger.WriteLog(ex);
+                MessageBox.Show(ex.Message);
+                Close();
+            }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

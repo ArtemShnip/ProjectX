@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using System.Management;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace WpfProjectX.Watcher
 {
     class ProgramWatcher
     {
-        public static string[] arrayProgramm = { "Calculator.exe", "Illustrator.exe", "Photoshop.exe", "notepad.exe", "HxCalendarAppImm.exe", "mspaint.exe","Telegram.exe" };
+        private readonly string _path = $"{Environment.CurrentDirectory}\\SaveData\\programDataArray.xml";
+        public static string[] arrayProgramm;
         public static Dictionary<string, string> runnedProgramms = new Dictionary<string, string>();
         public delegate void EventWatch(string id);
-        //public delegate void EventWatch2(string id, string time);
         public event EventWatch NotifyStart, NotifyStop;
-        //public event EventWatch2 ;
 
         public async void Wather()
-       {
+        {
+            LoadArray(_path);
             await Task.Run(() =>
             {
                 ManagementEventWatcher startProgramm = new ManagementEventWatcher(
@@ -32,27 +34,41 @@ namespace WpfProjectX.Watcher
                 startProgramm.Stop();
                 stopProgramm.Stop();
             });
-       }
+        }
 
         void StartProcesses(object programm, EventArrivedEventArgs e)
         {
-            string name = e.NewEvent.Properties["ProcessName"].Value.ToString();                                        // получаю имя запущеного процесса
-            if (Array.Exists(arrayProgramm, element => element == name) && !runnedProgramms.ContainsValue(name))        // смотрю есть ли этот процесс в массиве
+            string name = e.NewEvent.Properties["ProcessName"].Value.ToString();
+            if (Array.Exists(arrayProgramm, element => element == name) && !runnedProgramms.ContainsValue(name))
             {
-                string id = e.NewEvent.Properties["ProcessId"].Value.ToString();                                        // получаю Id запущенного процесса
-                runnedProgramms.Add(id, name);                                                                          // добавляю в коллекцию запущенных программ Name & Id
+                string id = e.NewEvent.Properties["ProcessId"].Value.ToString();
+                runnedProgramms.Add(id, name);
                 NotifyStart?.Invoke(id);
             }
         }
 
         void StopProcesses(object programm, EventArrivedEventArgs e)
         {
-            string id = e.NewEvent.Properties["ProcessId"].Value.ToString();                                            // смотрю Id остановившегося процесса
-            if (runnedProgramms.ContainsKey(id))                                                                        // смотрю есть ли такой Id в колекции запущенных программ
+            string id = e.NewEvent.Properties["ProcessId"].Value.ToString();
+            if (runnedProgramms.ContainsKey(id))
             {
-                runnedProgramms.Remove(id);                                                                             // удаляю из коллекции остановившуюся программу
+                runnedProgramms.Remove(id);
                 NotifyStop?.Invoke(id);
             }
+        }
+
+        public void LoadArray(string path)
+        {
+            Type type = typeof(string[]);
+            string[] retVal;
+
+            XmlSerializer formatter = new XmlSerializer(type);
+
+            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                retVal = (string[])formatter.Deserialize(stream);
+            }
+            arrayProgramm = retVal;
         }
     }
 }

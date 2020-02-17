@@ -10,17 +10,21 @@
         Title="ProjectX" Height="450" Width="885" Loaded="Window_Loaded"  Foreground="Black">
     
     <Grid>
-        <DataGrid x:Name ="dgTodoList" ItemsSource="{Binding}" FontSize="16" Margin="5" AutoGenerateColumns="False">
+        <Button Content="Save" HorizontalAlignment="Left" Margin="786,5,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button Content="Add Program" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+        <DataGrid x:Name ="dgTodoList" ItemsSource="{Binding}" FontSize="16" Margin="5,30,5,5"  AutoGenerateColumns="False" HorizontalAlignment="Center">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Path= Id}" IsReadOnly="True" Header="ID" Width="25"/>
+                <DataGridTextColumn Binding="{Binding Path= Id, Mode=TwoWay}" IsReadOnly="True" Header="ID" Width="50"  />
                 <DataGridTextColumn Binding="{Binding Path= Date}" IsReadOnly="True" Header="Date" Width="100"/>
                 <DataGridTextColumn Binding="{Binding Path= Name}" IsReadOnly="True" Header="Name" Width="150"/>
-                <DataGridTextColumn Binding="{Binding Path= TimeStart}" IsReadOnly="True" Header="Time start" Width="150"/>
-                <DataGridTextColumn Binding="{Binding Path= TimeStop}" IsReadOnly="True" Header="Time stop" Width="150"/>
-                <DataGridTextColumn Binding="{Binding Path= LongTime}" IsReadOnly="True" Header="Long time" Width="150"/>
-                <DataGridTextColumn Binding="{Binding Path= Client}" IsReadOnly="False" Header="Client" Width="150"/>
+                <DataGridTextColumn Binding="{Binding Path= ShortTimeStart}" IsReadOnly="True" Header="Time start" Width="100"/>
+                <DataGridTextColumn Binding="{Binding Path= TimeStop}" IsReadOnly="True" Header="Time stop" Width="100"/>
+                <DataGridTextColumn Binding="{Binding Path= LongTime}" IsReadOnly="True" Header="Long time" Width="100"/>
+                <DataGridTextColumn Binding="{Binding Path= Client, Mode=TwoWay}" IsReadOnly="False" Header="Client" Width="300"/>
             </DataGrid.Columns>
             
         </DataGrid>
+        
+
     </Grid>
 </Window>

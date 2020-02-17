@@ -9,11 +9,12 @@ namespace WpfProjectX.ProgramModels
         private ObservableCollection<ProgramModel> _programModelsList;
         private string _id;
         private string _name;
-        private DateTime _date;
+        private string _date;
         private DateTime _timeStart;
-        private DateTime _timeStop;
+        private string _timeStop;
         private string _longTime;
         private string _client;
+        private string _shortTimeStart;
 
         public string Id
         {
@@ -33,7 +34,7 @@ namespace WpfProjectX.ProgramModels
             }
         }
 
-        public DateTime Date
+        public string Date
         {
             get { return _date; }
             set { _date = value; }
@@ -45,8 +46,13 @@ namespace WpfProjectX.ProgramModels
             set { _timeStart = value; }
         }
 
+        public string ShortTimeStart
+        {
+            get { return _shortTimeStart; }
+            set { _shortTimeStart = value; }
+        }
 
-        public DateTime TimeStop
+        public string TimeStop
         {
             get { return _timeStop; }
             set { _timeStop = value; }
