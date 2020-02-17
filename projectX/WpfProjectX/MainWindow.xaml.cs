@@ -118,7 +118,19 @@ namespace WpfProjectX
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+            AddProgram addProgram = new AddProgram();
 
+            if (addProgram.ShowDialog() == true)
+            {
+                if (addProgram.NameProgram != "")
+                {
+                    string name = addProgram.NameProgram;
+                    _fileIOservice.SaveArrayProgram(name);
+                }else
+                    MessageBox.Show("you don't enter name");
+                
+            }
+            
         }
     }
 }
