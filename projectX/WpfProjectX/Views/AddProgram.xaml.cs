@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfProjectX.Views;
 
 namespace WpfProjectX
 {
@@ -32,6 +33,12 @@ namespace WpfProjectX
         public string NameProgram
         {
             get { return nameBox.Text; }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Help help = new Help();
+            help.ShowDialog();
         }
     }
 }

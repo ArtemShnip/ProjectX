@@ -1,0 +1,22 @@
+﻿<Window x:Class="WpfProjectX.Views.Help"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfProjectX.Views"
+        mc:Ignorable="d"
+        Title="Window1" Height="450" Width="800">
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" Margin="26,10,0,0" TextWrapping="Wrap" Text="Как добавить программу?" VerticalAlignment="Top" Width="230"/>
+        <Image HorizontalAlignment="Left" Height="203" Margin="87,81,0,0" VerticalAlignment="Top" Width="169"/>
+        <Image Margin="26,81,534,101" Source="/WpfProjectX;component/Image1.png" Stretch="Fill"/>
+        <Image HorizontalAlignment="Left" Height="75" Margin="378,81,0,0" VerticalAlignment="Top" Width="99"/>
+        <Image Margin="327,81,285,111" Source="/WpfProjectX;component/Image2.png" Stretch="Fill"/>
+        <TextBlock HorizontalAlignment="Left" Height="21" Margin="26,42,0,0" TextWrapping="Wrap" Text="1. Открыть свойства программы" VerticalAlignment="Top" Width="225"/>
+        <TextBlock HorizontalAlignment="Left" Height="21" Margin="327,42,0,0" TextWrapping="Wrap" Text="2. Копировать имя программы" VerticalAlignment="Top" Width="180"/>
+        <Image HorizontalAlignment="Left" Height="156" Margin="562,97,0,0" VerticalAlignment="Top" Width="114"/>
+        <Image Margin="582,81,38,110" Source="/WpfProjectX;component/Image3.png" Stretch="Fill"/>
+        <TextBlock HorizontalAlignment="Left" Height="21" Margin="582,42,0,0" TextWrapping="Wrap" Text="3. Вставить скопированное имя" VerticalAlignment="Top" Width="160"/>
+
+    </Grid>
+</Window>
