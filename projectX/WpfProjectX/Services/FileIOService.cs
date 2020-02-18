@@ -18,6 +18,7 @@ namespace WpfProjectX.Services
         }
         public ObservableCollection<ProgramModel> LoadDate()
         {
+            
             var fileExists = File.Exists(_path);
             if (!fileExists)
             {

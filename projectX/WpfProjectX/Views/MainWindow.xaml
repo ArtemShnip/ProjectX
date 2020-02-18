@@ -7,7 +7,7 @@
         xmlns:programmodels="clr-namespace:WpfProjectX.ProgramModels"
         mc:Ignorable="d"
         
-        Title="ProjectX" Height="450" Width="885" Loaded="Window_Loaded"  Foreground="Black">
+        Title="ProjectX" Height="450" Width="885" Loaded="Window_Loaded"  Foreground="Black" Closing="Window_Closing">
     
     <Grid>
         <Button Content="Save" HorizontalAlignment="Left" Margin="786,5,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>

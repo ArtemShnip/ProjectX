@@ -59,7 +59,6 @@ namespace WpfProjectX
         public void AddNew(string id)
         {
             var proc = Process.GetProcessById(int.Parse(id));
-            string ff =proc.MainModule.FileName;    //get the path
             DateTime date = DateTime.Now;
             var procStart = proc.StartTime;
             _programModelsList.Add(
@@ -106,7 +105,7 @@ namespace WpfProjectX
         {
             try
             {
-                _fileIOservice.SaveDate(_programModelsList);
+                
                 MessageBox.Show("Изменения сохранены");
             }
             catch (Exception ex)
@@ -127,11 +126,17 @@ namespace WpfProjectX
                 {
                     string name = addProgram.NameProgram;
                     _fileIOservice.SaveArrayProgram(name);
-                }else
+                    MessageBox.Show("Изменения вступят в силу после перезапуска программы");
+                }
+                else
                     MessageBox.Show("you don't enter name");
-                
             }
             
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            _fileIOservice.SaveDate(_programModelsList);
         }
     }
 }
